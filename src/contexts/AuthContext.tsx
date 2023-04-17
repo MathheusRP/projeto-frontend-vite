@@ -58,6 +58,7 @@ export interface IAuthContext {
     setUserData: any
     loading: boolean
     addContact: any
+    updateContact: any
     deleteContact: any
 }
 
@@ -109,8 +110,7 @@ const AuthProvider = ({ children }: IContextProps) => {
             .then((response) => {
                 localStorage.setItem('userToken', response.data.token)
                 Api.defaults.headers.authorization = `Bearer ${response.data.token}`;
-                navigate(`/dashboard`, { replace: true });
-
+                navigate('/dashboard', { replace: true });
             })
             .catch((error) => {
                 console.log(error)
@@ -138,6 +138,21 @@ const AuthProvider = ({ children }: IContextProps) => {
         }
     }
 
+    const updateContact = async (contactData: any, id: string) => {
+
+        const token = localStorage.getItem('userToken')
+        try {
+            Api.defaults.headers.authorization = `Bearer ${token}`;
+            const response = await Api.patch(`/contacts/${id}`, contactData)
+            return response.data
+        }
+        catch (error) {
+            console.log(error)
+        }
+        console.log(id)
+        // console.log(contactData)
+    }
+
     const deleteContact = async (id: number) => {
         const token = localStorage.getItem('userToken')
         try {
@@ -158,6 +173,7 @@ const AuthProvider = ({ children }: IContextProps) => {
                 setUserData,
                 loading,
                 addContact,
+                updateContact,
                 deleteContact
             }}>
             {children}

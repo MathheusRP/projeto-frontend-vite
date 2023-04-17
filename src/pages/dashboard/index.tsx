@@ -8,16 +8,21 @@ import { useContext, useEffect } from "react"
 import { AuthContext } from "../../contexts/AuthContext"
 
 import { Navigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 import AddContactModal from "../../components/addContactModal"
 
 const Dashboard = () => {
 
+    const navigate = useNavigate()
+
+
     const { userData, loading } = useContext(AuthContext)
 
-    // useEffect(() => {
-    //     getUserData()
-    // }, [])
+    const exit = () => {
+        localStorage.setItem('userToken', '')
+        navigate('/', { replace: true })
+    }
 
     if (loading) {
         return (
@@ -41,7 +46,7 @@ const Dashboard = () => {
                                     <ListContacts contactList={userData?.contact} />
                                 </section>
                                 <div className="buttons">
-                                    <button> <ImExit /> </button>
+                                    <button onClick={() => exit()}> <ImExit /> </button>
                                     <button> <CgProfile /> </button>
                                     <button> <MdOutlineContactPhone /> </button>
                                 </div>

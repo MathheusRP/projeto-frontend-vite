@@ -5,7 +5,7 @@ import { AiFillEdit } from 'react-icons/ai'
 import { AiFillDelete } from 'react-icons/ai'
 import { AuthContext } from "../../contexts/AuthContext"
 import AddContactModal from "../addContactModal"
-
+import UpdateContactModal from "../updateContactModal"
 
 
 const ListContacts = ({ contactList }: any) => {
@@ -13,6 +13,9 @@ const ListContacts = ({ contactList }: any) => {
 
     const [list, setList] = useState<any>(contactList)
     const [modal, setModal] = useState<string>('modalOff')
+    const [updateModal, setUpdateModal] = useState<string>('modalOff')
+
+
 
     const updateList = () => {
         useEffect(() => {
@@ -64,8 +67,8 @@ const ListContacts = ({ contactList }: any) => {
         <ListContactStyled focuss={focuss}>
             <div className="header">
                 <button onClick={() => setModal('modalOn')}><AiOutlineUserAdd /></button>
-                <button ><AiFillEdit /></button>
-                <button onClick={() => contactDelete(Number(focuss))}><AiFillDelete /></button>
+                <button onClick={() => setUpdateModal('modalOn')} ><AiFillEdit /></button>
+                <button onClick={() => contactDelete(focuss)}><AiFillDelete /></button>
             </div>
 
             <div className="containerList">
@@ -91,6 +94,8 @@ const ListContacts = ({ contactList }: any) => {
                 </ul>
             </div>
             <AddContactModal modal={modal} setModal={setModal} setList={setList} list={list} />
+            <UpdateContactModal modal={updateModal} setModal={setUpdateModal} setList={setList} list={list} contactId={contactId} />
+
         </ListContactStyled>
     )
 }
