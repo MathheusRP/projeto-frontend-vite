@@ -1,5 +1,6 @@
-import { createContext, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import Api from '../services/api'
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -27,6 +28,14 @@ interface IContact {
     createdAt: string
 }
 
+interface ICreateContact {
+    id: number
+    name: string
+    email: string
+    phone_number: string
+    createdAt: string
+}
+
 interface IUserData {
     id: number
     name: string
@@ -47,7 +56,9 @@ export interface IAuthContext {
     userData: null | IUserData
     // setUserData: React.Dispatch<React.SetStateAction<IUserData | null>>;
     setUserData: any
-    getUserData: any
+    loading: boolean
+    addContact: any
+    deleteContact: any
 }
 
 export const AuthContext = createContext<IAuthContext>({} as IAuthContext)
@@ -56,13 +67,49 @@ export const AuthContext = createContext<IAuthContext>({} as IAuthContext)
 const AuthProvider = ({ children }: IContextProps) => {
 
     const [userData, setUserData] = useState<IUserData | null>(null)
+    const [loading, setLoding] = useState<boolean>(true)
+
+    const navigate = useNavigate()
+
+
+    useEffect(() => {
+        async function loadUser() {
+            const token = localStorage.getItem('userToken')
+
+            if (token) {
+
+                Api.defaults.headers.authorization = `Bearer ${token}`;
+
+                try {
+                    const { data } = await Api.get('/contacts')
+
+                    setUserData(data)
+                }
+                catch (error) {
+                    console.log(error)
+                }
+
+                // .then((response) => {
+                //     setUserData(response.data)
+                // })
+                // .catch((error) => {
+                //     console.log(error)
+                // })
+
+            }
+            setLoding(false)
+        }
+        console.log('ok')
+        loadUser()
+    }, [])
+
 
     const userLogin = async (userData: IUserLogin) => {
         Api.post('/login', userData)
             .then((response) => {
                 localStorage.setItem('userToken', response.data.token)
                 Api.defaults.headers.authorization = `Bearer ${response.data.token}`;
-                getUserData()
+                navigate(`/dashboard`, { replace: true });
 
             })
             .catch((error) => {
@@ -80,22 +127,39 @@ const AuthProvider = ({ children }: IContextProps) => {
             })
     }
 
-    const getUserData = async () => {
+    const addContact = async (data: ICreateContact) => {
         const token = localStorage.getItem('userToken')
-        Api.defaults.headers.authorization = `Bearer ${token}`;
-
-        await Api.get('/contacts')
-            .then((response) => {
-                setUserData(response.data)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        try {
+            Api.defaults.headers.authorization = `Bearer ${token}`;
+            return { data } = await Api.post('/contacts', data)
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
 
+    const deleteContact = async (id: number) => {
+        const token = localStorage.getItem('userToken')
+        try {
+            Api.defaults.headers.authorization = `Bearer ${token}`;
+            await Api.delete(`/contacts/${id}`)
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
-        <AuthContext.Provider value={{ userLogin, userRegister, userData, setUserData, getUserData }}>
+        <AuthContext.Provider value={
+            {
+                userLogin,
+                userRegister,
+                userData,
+                setUserData,
+                loading,
+                addContact,
+                deleteContact
+            }}>
             {children}
         </AuthContext.Provider>
     )
