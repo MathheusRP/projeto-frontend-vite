@@ -1,10 +1,10 @@
-import { useState } from "react"
 import ModalStyled from "./styled"
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from "react-hook-form"
+import { IUserRegister } from '../../types'
 
 const schema = yup.object({
     name: yup.string().required('Insira seu nome'),
@@ -13,16 +13,9 @@ const schema = yup.object({
     phone_number: yup.string().required('Insira seu telefone')
 })
 
-interface IUserLogin {
-    name: string
-    email: string
-    password: string
-    phone_number: string
-}
-
 const ModalRegister = ({ openModal, modal, modalAnimation }: any) => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<IUserLogin>({
+    const { register, handleSubmit, formState: { errors } } = useForm<IUserRegister>({
         resolver: yupResolver(schema)
     })
 

@@ -21,7 +21,9 @@ const GlobalStyled = createGlobalStyle`
 
     :root {
 
-        --color1: #521735;
+        /* --color1: #521735; */
+        --color1: rgb(60, 40, 60);
+        --color2: rgb(50, 60, 80);
         
         --grey0:  #0B0D0D;
         --grey1:  #212529;

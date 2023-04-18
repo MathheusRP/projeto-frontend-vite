@@ -1,5 +1,10 @@
 import styled, { css } from "styled-components";
 
+interface IContactFocus {
+    contactFocus: string
+}
+
+
 const ListContactStyled = styled.section`
 
     width: 90%;
@@ -13,6 +18,7 @@ const ListContactStyled = styled.section`
         display: flex;
         align-items: center;
         justify-content: space-around;
+        
 
         button {
             font-size: 25px;
@@ -74,9 +80,8 @@ const ListContactStyled = styled.section`
 
     
 
-            ${({ focuss }: any) => {
-        return css` 
-                    #${focuss}{
+            ${({ contactFocus }: IContactFocus) => {
+        return css` #${contactFocus}{
                         background-color: var(--grey3);
                         transition: 0.7s;
                     }

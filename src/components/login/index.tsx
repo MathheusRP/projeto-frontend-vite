@@ -4,16 +4,12 @@ import { AuthContext } from "../../contexts/AuthContext";
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from "react-hook-form"
+import { IUserLogin } from '../../types'
 
 const schema = yup.object({
     email: yup.string().email('Deve ser um email valido').required('Insira seu email'),
     password: yup.string().required('Insira sua senha')
 })
-
-interface IUserLogin {
-    email: string
-    password: string
-}
 
 const Login = ({ openModal }: any) => {
 

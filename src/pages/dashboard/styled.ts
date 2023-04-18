@@ -12,7 +12,7 @@ const DashboardStyled = styled.main`
     .container {
         height: 90%;
         width: 90%;
-        border: 6px solid var(--grey6);
+        border: 8px solid var(--grey6);
         border-radius: 32px;
         position: relative;
         max-width: 600px;
@@ -23,13 +23,14 @@ const DashboardStyled = styled.main`
         height: 80px;
         width: 100%;
         border-bottom: 4px solid var(--grey6);
-        background-color: var(--grey3);
+        background-color: var(--color2);
         color: var(--grey6);
         border-radius: 24px 24px 0px 0px;
         display: flex;
         align-items: center;
         justify-content: center;
         position: absolute;
+        z-index: 2;
     }
 
     .display {
@@ -48,7 +49,7 @@ const DashboardStyled = styled.main`
         height: 100px;
         width: 100%;
         border-top: 4px solid var(--grey6);
-        background-color: var(--grey3);
+        background-color: var(--color2);
         border-radius: 0px 0px 24px 24px;
         position: absolute;
         bottom: 0px;
@@ -56,6 +57,7 @@ const DashboardStyled = styled.main`
         align-items: center;
         justify-content: center;
         gap: 32px;
+        z-index: 2;
 
         button {
             height: 50px;
