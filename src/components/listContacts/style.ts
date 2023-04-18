@@ -18,6 +18,7 @@ const ListContactStyled = styled.section`
         display: flex;
         align-items: center;
         justify-content: space-around;
+        
 
         button {
             font-size: 25px;

@@ -6,6 +6,7 @@ import { AiFillDelete } from 'react-icons/ai'
 import { AuthContext } from "../../contexts/AuthContext"
 import AddContactModal from "../addContactModal"
 import UpdateContactModal from "../updateContactModal"
+import Profile from "../profile"
 
 
 const ListContacts = ({ contactList }: any) => {
@@ -74,6 +75,7 @@ const ListContacts = ({ contactList }: any) => {
                             )
                     }
                 </ul>
+
             </div>
             <AddContactModal modal={modal} setModal={setModal} setList={setList} list={list} />
             <UpdateContactModal modal={updateModal} setModal={setUpdateModal} setList={setList} list={list} contactId={contactId} />
