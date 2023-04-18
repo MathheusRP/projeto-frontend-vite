@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-
+import 'react-toastify/dist/ReactToastify.min.css'
 
 const GlobalStyled = createGlobalStyle`
 
@@ -38,6 +38,9 @@ const GlobalStyled = createGlobalStyle`
         --grey10: #FDFDFD;
     }
 
+    button {
+        cursor: pointer;
+    }
 
 `
 

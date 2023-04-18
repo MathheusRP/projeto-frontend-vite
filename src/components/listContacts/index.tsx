@@ -6,7 +6,7 @@ import { AiFillDelete } from 'react-icons/ai'
 import { AuthContext } from "../../contexts/AuthContext"
 import AddContactModal from "../addContactModal"
 import UpdateContactModal from "../updateContactModal"
-import Profile from "../profile"
+import { IContact } from '../../types'
 
 
 const ListContacts = ({ contactList }: any) => {
@@ -55,16 +55,16 @@ const ListContacts = ({ contactList }: any) => {
             </div>
 
             <div className="containerList">
-                <ul>
+                <ul >
                     {
                         list ?
                             (
-                                list.map((contact: any) => {
+                                list.map((contact: IContact) => {
                                     return (
-                                        <li id={`teste${contact.id}`} onClick={() => selectContact(contact.id)}>
+                                        <li id={`teste${contact.id}`} onClick={() => selectContact(String(contact.id))}>
                                             <h3>{contact.name}</h3>
-                                            <p>E-mail: {contact.email}</p>
-                                            <p>Telefone: {contact.phone_number}</p>
+                                            <p><b>E-mail</b>: {contact.email}</p>
+                                            <p><b>Telefone</b>: {contact.phone_number}</p>
                                         </li>
                                     )
                                 })

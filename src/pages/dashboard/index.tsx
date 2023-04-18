@@ -55,7 +55,7 @@ const Dashboard = () => {
                     )
                         :
                         (
-                            <Navigate to='/' />
+                            <h1>Error</h1>
                         )
                 }
 

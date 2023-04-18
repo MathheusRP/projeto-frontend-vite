@@ -65,12 +65,15 @@ const ListContactStyled = styled.section`
                 color: var(--grey1);
                 gap: 10px;
                 font-weight: 600;
+                cursor: pointer;
 
                 h3 {
                     color: rgb(80, 80, 200);
                 }            
 
-            
+                b {
+                    color: rgb(60, 60, 120);
+                }
             }
             
 

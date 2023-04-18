@@ -3,6 +3,7 @@ import Api from '../services/api'
 import { useNavigate } from 'react-router-dom'
 import { AxiosResponse } from 'axios'
 import { IUserLogin, IUserRegister, IContact, ICreateContact, IUpdateContact, IUserData } from '../types'
+import { notify_success, notify_error } from '../components/toast'
 
 interface IContextProps {
     children: React.ReactNode;
@@ -55,21 +56,24 @@ const AuthProvider = ({ children }: IContextProps) => {
         Api.post('/login', userData)
             .then((response) => {
                 localStorage.setItem('userToken', response.data.token)
-                // loadUser()
+                notify_success('Login')
                 navigate('/dashboard', { replace: true });
             })
             .catch((error) => {
-                console.log(error)
+                notify_error(error.response.data.message || 'Erro')
             })
     }
 
     const userRegister = (userData: IUserRegister): void => {
         Api.post('/users', userData)
             .then((response) => {
-                console.log(response)
+                notify_success('Conta criada')
+                setTimeout(() => {
+                    location.reload()
+                }, 1500)
             })
             .catch((error) => {
-                console.log(error)
+                notify_error(error.response.data.message || 'Erro')
             })
     }
 
@@ -80,7 +84,7 @@ const AuthProvider = ({ children }: IContextProps) => {
             return await Api.post('/contacts', data)
         }
         catch (error) {
-            console.log(error)
+            notify_error('Erro')
         }
     }
 
@@ -93,7 +97,7 @@ const AuthProvider = ({ children }: IContextProps) => {
             return response.data
         }
         catch (error) {
-            console.log(error)
+            notify_error('Erro')
         }
         console.log(id)
     }
@@ -105,7 +109,7 @@ const AuthProvider = ({ children }: IContextProps) => {
             await Api.delete(`/contacts/${id}`)
         }
         catch (error) {
-            console.log(error)
+            notify_error('Erro')
         }
     }
 
