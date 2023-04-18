@@ -4,18 +4,14 @@ import { AuthContext } from "../../contexts/AuthContext"
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from "react-hook-form"
+import { ICreateContact, IContact } from '../../types'
+import { AxiosResponse } from "axios"
 
 const schema = yup.object({
     name: yup.string().required(),
     email: yup.string().email().required(),
     phone_number: yup.string().required()
 })
-
-interface ICreateContact {
-    name: string
-    email: string
-    phone_number: string
-}
 
 const AddContactModal = ({ modal, setModal, list, setList }: any) => {
 
@@ -26,14 +22,12 @@ const AddContactModal = ({ modal, setModal, list, setList }: any) => {
     const { addContact } = useContext(AuthContext)
 
     const createContact = async (data: ICreateContact) => {
-        const newContact = await addContact(data)
-        if (newContact.data) {
+        const newContact: AxiosResponse<IContact, any> | undefined = await addContact(data)
+        if (newContact?.data) {
             setTimeout(() => {
                 setList([...list, newContact.data])
                 setModal('modalOff')
             }, 500)
-
-
         }
     }
 

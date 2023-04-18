@@ -9,42 +9,25 @@ import UpdateContactModal from "../updateContactModal"
 
 
 const ListContacts = ({ contactList }: any) => {
-
-
     const [list, setList] = useState<any>(contactList)
     const [modal, setModal] = useState<string>('modalOff')
     const [updateModal, setUpdateModal] = useState<string>('modalOff')
 
-
-
     const updateList = () => {
         useEffect(() => {
             setList(contactList)
-        }, [])
+        }, [contactList])
     }
 
     updateList()
 
-    const [focuss, setFocus] = useState('')
-    const [contactId, setContact] = useState('')
+    const [contactFocus, setFocus] = useState('')
+    const [contactId, setContact] = useState<string>('')
 
     const selectContact = (id: string) => {
         setFocus(`teste${id}`)
         setContact(id)
-        // console.log(focuss)
     }
-
-
-    // const addContact = () => {
-    //     const contact = {
-    //         id: list.length + 1,
-    //         name: `contato ${list.length + 1}`,
-    //         email: `contato${list.length + 1}@dev.com`,
-    //         phone_number: '11 95656-5656'
-    //     }
-    //     console.log('ok')
-    //     setList([...list, contact])
-    // }
 
     const { deleteContact } = useContext(AuthContext)
 
@@ -62,13 +45,12 @@ const ListContacts = ({ contactList }: any) => {
         }
     }
 
-
     return (
-        <ListContactStyled focuss={focuss}>
+        <ListContactStyled contactFocus={contactFocus}>
             <div className="header">
                 <button onClick={() => setModal('modalOn')}><AiOutlineUserAdd /></button>
                 <button onClick={() => setUpdateModal('modalOn')} ><AiFillEdit /></button>
-                <button onClick={() => contactDelete(focuss)}><AiFillDelete /></button>
+                <button onClick={() => contactDelete()}><AiFillDelete /></button>
             </div>
 
             <div className="containerList">

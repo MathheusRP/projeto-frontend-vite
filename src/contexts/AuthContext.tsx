@@ -1,65 +1,23 @@
-import { createContext, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react'
 import Api from '../services/api'
 import { useNavigate } from 'react-router-dom'
-
-
-
-interface IUserLogin {
-    email: string
-    password: string
-}
-
-interface IUserRegister {
-    name: string
-    email: string
-    password: string
-    phone_number: string
-}
+import { AxiosResponse } from 'axios'
+import { IUserLogin, IUserRegister, IContact, ICreateContact, IUpdateContact, IUserData } from '../types'
 
 interface IContextProps {
     children: React.ReactNode;
 }
 
-interface IContact {
-    id: number
-    name: string
-    email: string
-    phone_number: string
-    createdAt: string
-}
-
-interface ICreateContact {
-    id: number
-    name: string
-    email: string
-    phone_number: string
-    createdAt: string
-}
-
-interface IUserData {
-    id: number
-    name: string
-    email: string
-    phone_number: string
-    is_admin: boolean
-    createdAt: string
-    updatedAt: string
-    deletedAt: null | string
-    contact: IContact[]
-
-}
-
-
 export interface IAuthContext {
     userLogin(data: IUserLogin): void
     userRegister(data: IUserRegister): void
     userData: null | IUserData
-    // setUserData: React.Dispatch<React.SetStateAction<IUserData | null>>;
-    setUserData: any
+    setUserData: Dispatch<SetStateAction<IUserData | null>>
     loading: boolean
-    addContact: any
-    updateContact: any
-    deleteContact: any
+    addContact: (data: ICreateContact) => Promise<AxiosResponse<IContact> | undefined>
+    updateContact: (contactData: IUpdateContact, id: string) => Promise<IContact>
+    deleteContact: (id: string) => Promise<void>
+    loadUser: () => Promise<void>
 }
 
 export const AuthContext = createContext<IAuthContext>({} as IAuthContext)
@@ -72,44 +30,32 @@ const AuthProvider = ({ children }: IContextProps) => {
 
     const navigate = useNavigate()
 
+    async function loadUser() {
+        const token = localStorage.getItem('userToken')
+
+        if (token) {
+            Api.defaults.headers.authorization = `Bearer ${token}`;
+            try {
+                const { data } = await Api.get('/contacts')
+
+                setUserData(data)
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+        setLoding(false)
+    }
 
     useEffect(() => {
-        async function loadUser() {
-            const token = localStorage.getItem('userToken')
-
-            if (token) {
-
-                Api.defaults.headers.authorization = `Bearer ${token}`;
-
-                try {
-                    const { data } = await Api.get('/contacts')
-
-                    setUserData(data)
-                }
-                catch (error) {
-                    console.log(error)
-                }
-
-                // .then((response) => {
-                //     setUserData(response.data)
-                // })
-                // .catch((error) => {
-                //     console.log(error)
-                // })
-
-            }
-            setLoding(false)
-        }
-        console.log('ok')
         loadUser()
     }, [])
-
 
     const userLogin = async (userData: IUserLogin) => {
         Api.post('/login', userData)
             .then((response) => {
                 localStorage.setItem('userToken', response.data.token)
-                Api.defaults.headers.authorization = `Bearer ${response.data.token}`;
+                // loadUser()
                 navigate('/dashboard', { replace: true });
             })
             .catch((error) => {
@@ -131,7 +77,7 @@ const AuthProvider = ({ children }: IContextProps) => {
         const token = localStorage.getItem('userToken')
         try {
             Api.defaults.headers.authorization = `Bearer ${token}`;
-            return { data } = await Api.post('/contacts', data)
+            return await Api.post('/contacts', data)
         }
         catch (error) {
             console.log(error)
@@ -150,10 +96,9 @@ const AuthProvider = ({ children }: IContextProps) => {
             console.log(error)
         }
         console.log(id)
-        // console.log(contactData)
     }
 
-    const deleteContact = async (id: number) => {
+    const deleteContact = async (id: string) => {
         const token = localStorage.getItem('userToken')
         try {
             Api.defaults.headers.authorization = `Bearer ${token}`;
@@ -174,7 +119,8 @@ const AuthProvider = ({ children }: IContextProps) => {
                 loading,
                 addContact,
                 updateContact,
-                deleteContact
+                deleteContact,
+                loadUser
             }}>
             {children}
         </AuthContext.Provider>

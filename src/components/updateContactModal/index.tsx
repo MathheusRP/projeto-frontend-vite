@@ -1,9 +1,10 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import ContactModalStyled from "./styled"
 import { AuthContext } from "../../contexts/AuthContext"
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from "react-hook-form"
+import { IUpdateContact } from '../../types'
 
 const schema = yup.object({
     name: yup.string().optional(),
@@ -11,23 +12,17 @@ const schema = yup.object({
     phone_number: yup.string().optional()
 })
 
-interface ICreateContact {
-    name?: string
-    email?: string
-    phone_number?: string
-}
-
 const UpdateContactModal = ({ modal, setModal, list, setList, contactId }: any) => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<ICreateContact>({
+    const { register, handleSubmit, formState: { errors } } = useForm<IUpdateContact>({
         resolver: yupResolver(schema)
     })
 
     const { updateContact } = useContext(AuthContext)
 
-    const createContact = async (data: ICreateContact) => {
+    const createContact = async (data: IUpdateContact) => {
 
-        let newdata: ICreateContact = {}
+        let newdata: IUpdateContact = {}
 
         if (data.name) {
             newdata['name'] = data.name
@@ -50,8 +45,6 @@ const UpdateContactModal = ({ modal, setModal, list, setList, contactId }: any) 
                 setList([...newList, contact])
                 setModal('modalOff')
             }, 500)
-
-
         }
     }
 
